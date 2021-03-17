@@ -1,1 +1,1 @@
-https://40823124.github.io/CD2021/
+https://40823124.github.io/cd2021/
