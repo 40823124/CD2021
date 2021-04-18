@@ -169,11 +169,92 @@ end
 -- Put some clean-up code here:
 
 </pre>
+<h2>Team 2</h2>
+<p>Programming control mechanicalarm</p>
+<p>Used lua api to contral mechanical arm in CoppeliaSim</p>
+<p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/XAc5le46Wso" width="560"></iframe></p>
+<p></p>
+<p>I edited all joints separately</p>
+<p><img alt="" height="398" src="/images/programming.png" width="655"/></p>
+<p></p>
+<p>This is the parameter of the joint</p>
+<p><img alt="" height="398" src="/images/parameter.png" width="650"/></p>
+<pre class="brush:html;auto-links:false;toolbar:false" contenteditable="false">threadFunction=function()
+    while sim.getSimulationState()~=sim.simulation_advancing_abouttostop do
+        -- Read the keyboard messages (make sure the focus is on the main window, scene view):
+        message,auxiliaryData=sim.getSimulatorMessage()
+        while message~=-1 do
+            if (message==sim.message_keypress) then
+                if (auxiliaryData[1]==97) then
+                    -- d key
+                    if(o &lt; i*10) then
+                    o = o+i
+                    velocity=velocity+0.11
+                    torque=torque+0.1
+                    hammer_back = 0
+                    end
+                end
+                if (auxiliaryData[1]==100) then
+                    -- a key 
+                    if(o &gt; -i*10) then
+                    o = o-i
+                    velocity=velocity-0.11
+                    torque=torque-0.1
+                    hammer_back = 1
+                    end
+                end
+                
+            end
+            message,auxiliaryData=sim.getSimulatorMessage()
+        end
+ 
+        -- We take care of setting the desired hammer position:
+        if hammer_back == 1
+            then 
+               sim.setJointPosition(joint, -1, orientation)
+               --sim.setObjectPosition(hammer,-1, position)
+        end
+        sim.setJointTargetPosition(joint, velocity)
+        --sim.setJointForce(joint,torque)
+
+        -- Since this script is threaded, don't waste time here:
+        sim.switchThread() -- Resume the script at next simulation loop start
+    end
+end
+-- Put some initialization code here:
+-- Retrieving of some handles and setting of some initial values:
+i = 1
+o = i*1
+joint=sim.getObjectHandle('redundantRob_joint1')
+hammer=sim.getObjectHandle('Rectangle')
+velocity=0
+hammer_back=0
+torque=0
+sliding = 0
+orientation=sim.getJointPosition(joint, -1)
+position=sim.getObjectPosition(hammer,-1)
+-- Here we execute the regular thread code:
+res,err=xpcall(threadFunction,function(err) return debug.traceback(err) end)
+if not res then
+    sim.addStatusbarMessage('Lua runtime error: '..err)
+end
+ 
+-- Put some clean-up code here:
+</pre>
+<h2>Difficulties and debugging</h2>
+<p>在控制關節時因為每個關節所設置的位置與阻尼參數不同，會有抖動的情形發生，基本上把所有的參數都設成一樣的並把馬達改成控制模式就好了。</p>
+<p></p>
+<p>再來是程式的部分，因為每個關節都是用速度去控制轉動的，所以為了避免互相影響把每個關節分開單獨用一個子模組控制，而其中設置了轉動條件，限制轉動的次數，且設置了兩個參數控制互鎖，並用自身相加方式達成可以重複接收訊號。</p>
+<p></p>
+<p>另外在關節2的部分因為承受整隻手臂的絕大重量，所以轉動到了一定角度後會因為自身重量而倒下，所以在關節與程式皆有限制轉動的角度跟輸入次數，當按下按鍵一定次數後必須往反方向轉動，否則互鎖。</p>
+<p></p>
+<p>參考鍵盤ASCII控制字符</p>
 <h1>coppeliasim</h1>
 <h2>RemoteApi</h2>
 <p>I try to make a remoteapi(python) of coppeliasim to control the example of robot<br/>But it just start simulation, and I cannot control the movement of the model as I set it up.</p>
 <p><img alt="" height="619" src="/images/w5_1.gif" width="1219"/></p>
 <p>To use the remote API functionality in python script, need following 3 items:<br/>sim.py simConst.py remoteApi.dill ,it can ce found in coppeliasim-&gt;programming-&gt;remoteapibindings-&gt;python , just put all of then in to a same folder.</p>
+<p></p>
 <p>code</p>
 <pre class="brush:html;auto-links:false;toolbar:false" contenteditable="false">from __future__ import division
 import numpy as np
