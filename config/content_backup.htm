@@ -249,6 +249,7 @@ end
 <p>另外在關節2的部分因為承受整隻手臂的絕大重量，所以轉動到了一定角度後會因為自身重量而倒下，所以在關節與程式皆有限制轉動的角度跟輸入次數，當按下按鍵一定次數後必須往反方向轉動，否則互鎖。</p>
 <p></p>
 <p>參考鍵盤ASCII控制字符</p>
+<p><img alt="" height="653" src="/images/ASCII.gif" width="548"/></p>
 <h1>coppeliasim</h1>
 <h2>RemoteApi</h2>
 <p>I try to make a remoteapi(python) of coppeliasim to control the example of robot<br/>But it just start simulation, and I cannot control the movement of the model as I set it up.</p>
@@ -325,3 +326,37 @@ while sim.simxGetConnectionId(clientID) != -1:
             sim.simxSetJointTargetPosition(clientID, jointHandle[i], 120/RAD2DEG, sim.simx_opmode_oneshot)
             sim.simxPauseCommunication(clientID, False)
             </pre>
+<h1>python</h1>
+<p>各組隨機抽取2個學號並排序</p>
+<pre class="brush:html;auto-links:false;toolbar:false" contenteditable="false">import random
+
+with open("stage3_ag1.txt") as fh:
+    data=fh.readlines()
+
+for i in range(len(data)):
+    group=data[i].rstrip("\n").split("\t")
+    
+    subgroup=group[1:]
+    memberNum=0
+    count =0
+    for j in range(len(subgroup)):
+        if(subgroup[j]!=""):
+            count+=1
+            if(count%2==0):
+                memberNum+=1
+    print("group"+" "+str(i+1)+":"+str(memberNum))
+    beRandomGroup=[]
+    k=0
+    while(k&lt;len(subgroup)):
+        if(subgroup[k]!=""):
+            beRandomGroup.append(subgroup[k])
+        k=k+2
+    var=random.choice(beRandomGroup)
+    while(1==1):
+        var2=random.choice(beRandomGroup)
+        if(var2!=var):
+            break
+    print(var)
+    print(var2)
+    print("---------------------")
+</pre>

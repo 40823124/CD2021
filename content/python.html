@@ -133,10 +133,40 @@ img.add_border {
           </div>
           
         </header>
-    <div id="tipue_search_content"> <a href='About me 40823124..html'>Next</a> >> About me 40823124.<br /><h1>About</h1>
-<p><img alt="" height="306" src="./../images/EUt8sox.gif" width="500"/></p>
-<p>..</p>
-<br /> <a href='About me 40823124..html'>Next</a> >> About me 40823124.</div>
+    <div id="tipue_search_content">RemoteApi << <a href='RemoteApi.html'>Previous</a> <br /><h1>python</h1>
+<p>各組隨機抽取2個學號並排序</p>
+<pre class="brush:python;auto-links:false;toolbar:false" contenteditable="false">import random
+
+with open("stage3_ag1.txt") as fh:
+    data=fh.readlines()
+
+for i in range(len(data)):
+    group=data[i].rstrip("\n").split("\t")
+    
+    subgroup=group[1:]
+    memberNum=0
+    count =0
+    for j in range(len(subgroup)):
+        if(subgroup[j]!=""):
+            count+=1
+            if(count%2==0):
+                memberNum+=1
+    print("group"+" "+str(i+1)+":"+str(memberNum))
+    beRandomGroup=[]
+    k=0
+    while(k&lt;len(subgroup)):
+        if(subgroup[k]!=""):
+            beRandomGroup.append(subgroup[k])
+        k=k+2
+    var=random.choice(beRandomGroup)
+    while(1==1):
+        var2=random.choice(beRandomGroup)
+        if(var2!=var):
+            break
+    print(var)
+    print(var2)
+    print("---------------------")
+</pre><br />RemoteApi << <a href='RemoteApi.html'>Previous</a> </div>
         
     <!-- footer -->
       <div class="container">
