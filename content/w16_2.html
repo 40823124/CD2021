@@ -138,8 +138,46 @@ img.add_border {
 <p>請以自行繪製之零件輸入 CoppeliaSim 後, 組合為 MTB robot 模型, 並利用 Leo Editor 以 require 導入 Lua 程式運作, 分別控制各軸轉動示範.</p>
 <p></p>
 <p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/lCD11Zie9HI" width="560"></iframe></p>
-<p>影片內檔案放在github</p>
-<br />w16_1 << <a href='w16_1.html'>Previous</a> <a href='w16_3.html'>Next</a> >> w16_3</div>
+<p></p>
+<pre class="brush:python;auto-links:false;toolbar:false" contenteditable="false">function moving1()
+
+    sim.setJointTargetPosition(joint1,45*math.pi/180)
+    sim.setJointTargetPosition(joint2,-45*math.pi/180)
+
+    
+end
+function moving2()
+
+    sim.setJointTargetPosition(joint1,-45*math.pi/180)
+    sim.setJointTargetPosition(joint2,45*math.pi/180)
+
+    
+end
+
+
+function sysCall_threadmain()
+    
+    t=5
+    joint1=sim.getObjectHandle('joint1')
+    joint2=sim.getObjectHandle('joint2')
+    sim.setJointTargetPosition(joint1,0)
+    sim.setJointTargetPosition(joint2,0)
+
+    sim.wait(t)
+    while sim.getSimulationState()~=sim.simulation_advancing_abouttostopre do
+        moving1()
+        sim.wait(t)
+        moving2()
+        sim.wait(t)
+        sim.setJointTargetPosition(joint1,0)
+        sim.setJointTargetPosition(joint2,0)
+        sim.wait(t)
+    end
+
+end
+
+</pre>
+<p>影片內檔案放在github</p><br />w16_1 << <a href='w16_1.html'>Previous</a> <a href='w16_3.html'>Next</a> >> w16_3</div>
         
     <!-- footer -->
       <div class="container">

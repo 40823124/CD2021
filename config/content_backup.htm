@@ -413,7 +413,8 @@ end
 <p>因此，我可以將其替換並進行一些簡化，最終得到 Q1 的這個稍微不那麼複雜的表達式。</p>
 <p>And it is the same expression that I got following the geometric approach in the previous section.</p>
 <p>這與我在上一節中遵循幾何方法求出的表達式一模一樣。</p>
-<h3>w16_1</h3>
+<p>公式</p>
+<p><img alt="" height="314" src="/images/mtbrobot.png" width="560"/></p><h3>w16_1</h3>
 <h4>Onshape繪製手臂</h4>
 <p><img alt="" height="378" src="/images/w16_1.png" width="1020"/></p>
 <p><a href="https://cad.onshape.com/documents/afa2b64a9d6cff14c62bced8/w/5f455d7b62238b8359139a3a/e/9083ff112ce27fcd606686ec">Onshape檔案</a></p><h3>w16_2</h3>
@@ -421,8 +422,46 @@ end
 <p>請以自行繪製之零件輸入 CoppeliaSim 後, 組合為 MTB robot 模型, 並利用 Leo Editor 以 require 導入 Lua 程式運作, 分別控制各軸轉動示範.</p>
 <p></p>
 <p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/lCD11Zie9HI" width="560"></iframe></p>
-<p>影片內檔案放在github</p>
-<h3>w16_3</h3>
+<p></p>
+<pre class="brush:python;auto-links:false;toolbar:false" contenteditable="false">function moving1()
+
+    sim.setJointTargetPosition(joint1,45*math.pi/180)
+    sim.setJointTargetPosition(joint2,-45*math.pi/180)
+
+    
+end
+function moving2()
+
+    sim.setJointTargetPosition(joint1,-45*math.pi/180)
+    sim.setJointTargetPosition(joint2,45*math.pi/180)
+
+    
+end
+
+
+function sysCall_threadmain()
+    
+    t=5
+    joint1=sim.getObjectHandle('joint1')
+    joint2=sim.getObjectHandle('joint2')
+    sim.setJointTargetPosition(joint1,0)
+    sim.setJointTargetPosition(joint2,0)
+
+    sim.wait(t)
+    while sim.getSimulationState()~=sim.simulation_advancing_abouttostopre do
+        moving1()
+        sim.wait(t)
+        moving2()
+        sim.wait(t)
+        sim.setJointTargetPosition(joint1,0)
+        sim.setJointTargetPosition(joint2,0)
+        sim.wait(t)
+    end
+
+end
+
+</pre>
+<p>影片內檔案放在github</p><h3>w16_3</h3>
 <h4>逆向運動學函式</h4>
 <p>1.鍵盤控制:</p>
 <p><iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen" frameborder="0" height="315" src="https://www.youtube.com/embed/zjN3X-FQxyw" title="YouTube video player" width="560"></iframe></p>
