@@ -122,7 +122,7 @@ img.add_border {
                             <li><a href="./../blog/index.html">blog</a></li>
                         </ul>
                       </li>
-                     <li class='has-children'><a href='About.html'>About</a><ul class='dropdown'><li><a href='About me 40823124..html'>About me 40823124.</a></li></ul><li class='has-children'><a href='Team project.html'>Team project</a><ul class='dropdown'><li><a href='Team1 W2.html'>Team1 W2</a><li><a href='Team1 W3.html'>Team1 W3</a><li><a href='Team 2.html'>Team 2</a><li><a href='Difficulties and debugging.html'>Difficulties and debugging</a><li class='has-children'><a href='Team 3.html'>Team 3</a><ul class='dropdown'><li><a href='RoboDK.html'>RoboDK</a><li><a href='MTB_robot.html'>MTB_robot</a><li><a href='W15.html'>W15</a><li><a href='w16_1.html'>w16_1</a><li><a href='w16_2.html'>w16_2</a><li><a href='w16_3_1.html'>w16_3_1</a><li><a href='w16_3_2.html'>w16_3_2</a></li></li></ul></ul><li class='has-children'><a href='coppeliasim.html'>coppeliasim</a><ul class='dropdown'><li><a href='RemoteApi.html'>RemoteApi</a></li></ul><li><a href='python.html'>python</a></li>
+                     <li class='has-children'><a href='About.html'>About</a><ul class='dropdown'><li><a href='About me 40823124..html'>About me 40823124.</a></li></ul><li class='has-children'><a href='Team project.html'>Team project</a><ul class='dropdown'><li><a href='Team1 W2.html'>Team1 W2</a><li><a href='Team1 W3.html'>Team1 W3</a><li><a href='Team 2.html'>Team 2</a><li><a href='Difficulties and debugging.html'>Difficulties and debugging</a><li class='has-children'><a href='Team 3.html'>Team 3</a><ul class='dropdown'><li><a href='w16_1.html'>w16_1</a><li><a href='w16_2.html'>w16_2</a><li><a href='w16_3_1.html'>w16_3_1</a><li><a href='w16_3_2.html'>w16_3_2</a></li></li></ul></ul><li class='has-children'><a href='coppeliasim.html'>coppeliasim</a><ul class='dropdown'><li><a href='RemoteApi.html'>RemoteApi</a></li></ul><li><a href='python.html'>python</a><li><a href='two joints robot.html'>two joints robot</a></li>
                       </ul>
                 </nav>
               </div>
@@ -136,22 +136,8 @@ img.add_border {
     <div id="tipue_search_content">w16_3_1 << <a href='w16_3_1.html'>Previous</a> <a href='coppeliasim.html'>Next</a> >> coppeliasim<br /><h1>w16_3_2</h1>
 <p>2.迴圈自動</p>
 <p><iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen" frameborder="0" height="315" src="https://www.youtube.com/embed/NeT7Q6wGPtY" title="YouTube video player" width="560"></iframe></p>
-<p></p>
-<pre class="brush:python;auto-links:false;toolbar:false" contenteditable="false">function moving(x,y)
-  
-    a1=0.4861386976
-    a2=0.3819028766
---角度&gt;0
-    if x&gt;0 and y&gt;0 then
- 		r=x^2+y^2
-  		q2=math.deg(math.acos((r-a1^2-a2^2)/(2*a1*a2)))
-  		s2=math.sin(math.rad(q2))
-  		c2=math.cos(math.rad(q2))
- 		q1=math.deg(math.atan(y/x)-math.atan((a2*s2)/(a1+a2*c2)))
- 	end
---角度&lt;0 if="" x="" 0="" and="" y="" 0="" then="" q2="-math.deg(math.acos((x^2+y^2-a1^2-a2^2)/(2*a1*a2)))" q1="math.deg(math.atan2(y," x="" math="" atan2="" a2="" math="" sin="" q2="" a1="" a2="" math="" cos="" q2="" end="" print="" q1="" print="" q2="" sim="" setjointtargetposition="" joint1="" q1="" math="" pi="" 180="" sim="" setjointtargetposition="" joint2="" q2="" math="" pi="" 180="" end="" function="" pick_and_place="" x="" y="" sim="" setintegersignal="" pad_switch="" 0="" moving="" x="" y="" sim="" wait="" t="" sim="" setintegersignal="" pad_switch="" 1="" sim="" setjointtargetposition="" joint4="" -0="" 060="" sim="" wait="" t="" sim="" setjointtargetposition="" joint4="" 0="" sim="" wait="" t="" end="" function="" syscall_threadmain="" t="5" joint1="sim.getObjectHandle('joint1')" joint2="sim.getObjectHandle('joint2')" joint4="sim.getObjectHandle('joint4')" sim="" setintegersignal="" pad_switch="" 1="" while="" sim="" getsimulationstate="" sim="" simulation_advancing_abouttostopre="" do="" x="0.2" y="0.7" moving="" x="" y="" sim="" wait="" t="" pick_and_place="" x="" y="" sim="" wait="" t="" x="-0.3" y="-0.55" moving="" x="" y="" sim="" wait="" t="" pick_and_place="" x="" y="" sim="" wait="" t="" end="" end="" pre=""&gt;</pre>
-<p>程式部分採用錢個禮拜中逆向運動學與聯桿的算式，求出兩根連桿旋轉的角度，但(-0.3,-0.55)這個角度的計算還需要再做更正</p>
-<pre class="brush:python;auto-links:false;toolbar:false" contenteditable="false"><!--0--></pre><br />w16_3_1 << <a href='w16_3_1.html'>Previous</a> <a href='coppeliasim.html'>Next</a> >> coppeliasim</div>
+<p><a href="https://gist.github.com/40823124/013d0c991c1435c133ecd733eebe95c4">程式連結</a></p>
+<p>程式部分採用錢個禮拜中逆向運動學與聯桿的算式，求出兩根連桿旋轉的角度，但(-0.3,-0.55)這個角度的計算還需要再做更正</p><br />w16_3_1 << <a href='w16_3_1.html'>Previous</a> <a href='coppeliasim.html'>Next</a> >> coppeliasim</div>
         
     <!-- footer -->
       <div class="container">

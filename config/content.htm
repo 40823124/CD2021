@@ -255,18 +255,266 @@ end
 <p>參考鍵盤ASCII控制字符</p>
 <p><img alt="" height="653" src="/images/ASCII.gif" width="548"/></p>
 <h2>Team 3</h2>
-<h3>RoboDK</h3>
-<p>RoboDK的執行檔在bin目錄下</p>
-<p><img alt="" height="728" src="/images/ROBODK.png" width="642"/> </p>
-<p>執行API前需安裝pip</p>
-<p><img alt="" height="54" src="/images/pipROBODK.png" width="578"/></p>
-<p><b>error</b></p>
-<p><b>其中一個函示庫無法找到</b></p>
-<p><b><img alt="" height="752" src="/images/pipROBODK.png error.png" width="844"/></b></p>
-<h3>MTB_robot</h3>
-<p>嘗試找出plugin的部分</p>
-<p><img alt="" height="972" src="/images/mtb1.png" width="900"/></p>
-<h3>W15</h3>
+<h3>w16_1</h3>
+<h4>Onshape繪製手臂</h4>
+<p><img alt="" height="378" src="/images/w16_1.png" width="1020"/></p>
+<p><a href="https://cad.onshape.com/documents/afa2b64a9d6cff14c62bced8/w/5f455d7b62238b8359139a3a/e/9083ff112ce27fcd606686ec">Onshape檔案</a></p>
+<h3>w16_2</h3>
+<h4>建立 CoppeliaSim 4.1.0 MTB robot 場景</h4>
+<p>請以自行繪製之零件輸入 CoppeliaSim 後, 組合為 MTB robot 模型, 並利用 Leo Editor 以 require 導入 Lua 程式運作, 分別控制各軸轉動示範.</p>
+<p></p>
+<p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/lCD11Zie9HI" width="560"></iframe></p>
+<p></p>
+<pre class="brush:lua;auto-links:false;toolbar:false" contenteditable="false">function moving1()
+
+    sim.setJointTargetPosition(joint1,45*math.pi/180)
+    sim.setJointTargetPosition(joint2,-45*math.pi/180)
+
+    
+end
+function moving2()
+
+    sim.setJointTargetPosition(joint1,-45*math.pi/180)
+    sim.setJointTargetPosition(joint2,45*math.pi/180)
+
+    
+end
+
+
+function sysCall_threadmain()
+    
+    t=5
+    joint1=sim.getObjectHandle('joint1')
+    joint2=sim.getObjectHandle('joint2')
+    sim.setJointTargetPosition(joint1,0)
+    sim.setJointTargetPosition(joint2,0)
+
+    sim.wait(t)
+    while sim.getSimulationState()~=sim.simulation_advancing_abouttostopre do
+        moving1()
+        sim.wait(t)
+        moving2()
+        sim.wait(t)
+        sim.setJointTargetPosition(joint1,0)
+        sim.setJointTargetPosition(joint2,0)
+        sim.wait(t)
+    end
+
+end
+</pre>
+<p>影片內檔案放在github</p>
+<h3>w16_3_1</h3>
+<h4>逆向運動學函式</h4>
+<p>1.鍵盤控制:</p>
+<p><iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen" frameborder="0" height="315" src="https://www.youtube.com/embed/zjN3X-FQxyw" title="YouTube video player" width="560"></iframe></p>
+<p>鍵盤控制的ASCII對應表在之前的文章中有，每次轉動5度，吸盤上下則只有下跟原點兩種</p>
+<pre class="brush:lua;auto-links:false;toolbar:false" contenteditable="false">function sysCall_init() 
+    b1=sim.getObjectHandle('joint1')
+    m1=sim.getObjectHandle('joint2')
+    s1=sim.getObjectHandle('joint4')
+    suctionPad=sim.getObjectHandle('suctionPad')
+    BaseFrame=sim.getObjectHandle("BaseFrame")
+    block =sim.getObjectHandle("BOX")
+    r1 = 0
+    r2 = 0
+    d3 = 0
+    deg = math.pi/180
+end
+function sysCall_actuation() 
+
+    message, auxiliaryData=sim.getSimulatorMessage()
+        while message ~= -1 do
+            key=auxiliaryData[1]
+            if (message==sim.message_keypress) then
+                if (auxiliaryData[1]==101) then 
+                    --press e to open the suctionpad
+sim.setScriptSimulationParameter(sim.getScriptAssociatedWithObject(suctionPad),'active','true')
+                end 
+                
+                if (auxiliaryData[1]==113) then 
+                    --press q to close the suctionpad
+sim.setScriptSimulationParameter(sim.getScriptAssociatedWithObject(suctionPad),'active','false')
+                end 
+                
+                if (auxiliaryData[1]==068) then 
+                    --press D to turn joint1
+                     r1 = r1 + 5*deg
+                     sim.setJointPosition(b1, r1)
+                end 
+                if (auxiliaryData[1]==065) then 
+                    --press A to turn joint1
+                     r1 = r1  - 5*deg
+                     sim.setJointPosition(b1, r1)
+                end 
+                if (auxiliaryData[1]==100) then 
+                    --press d to turn joint2
+                     r2 = r2 + 5*deg
+                     sim.setJointPosition(m1, r2)
+                end 
+                if (auxiliaryData[1]==097) then 
+                    -- press a to turn joint2
+                     r2 = r2 - 5*deg
+                     sim.setJointPosition(m1, r2)
+                end 
+                if (auxiliaryData[1]==119) then 
+                    --press s to control joint4
+                     d3 =-0.058
+                     sim.setJointPosition(s1, d3)
+                end 
+                if (auxiliaryData[1]==115) then 
+                    --press w to control joint4
+                     sim.setJointPosition(s1, 0)
+                end 
+                
+           end  
+    message, auxiliaryData=sim.getSimulatorMessage()
+        end 
+end 
+
+
+</pre>
+<p></p>
+<h3>w16_3_2</h3>
+<p>2.迴圈自動</p>
+<p><iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen" frameborder="0" height="315" src="https://www.youtube.com/embed/NeT7Q6wGPtY" title="YouTube video player" width="560"></iframe></p>
+<p><a href="https://gist.github.com/40823124/013d0c991c1435c133ecd733eebe95c4">程式連結</a></p>
+<p>程式部分採用錢個禮拜中逆向運動學與聯桿的算式，求出兩根連桿旋轉的角度，但(-0.3,-0.55)這個角度的計算還需要再做更正</p><h1>coppeliasim</h1>
+<h2>RemoteApi</h2>
+<p>I try to make a remoteapi(python) of coppeliasim to control the example of robot<br/>But it just start simulation, and I cannot control the movement of the model as I set it up.</p>
+<p><img alt="" height="619" src="/images/w5_1.gif" width="1219"/></p>
+<p>To use the remote API functionality in python script, need following 3 items:<br/>sim.py simConst.py remoteApi.dill ,it can ce found in coppeliasim-&gt;programming-&gt;remoteapibindings-&gt;python , just put all of then in to a same folder.</p>
+<p></p>
+<p>code</p>
+<pre class="brush:html;auto-links:false;toolbar:false" contenteditable="false">from __future__ import division
+import numpy as np
+import math
+import sim
+
+RAD2EDG = 180 / math.pi   # 常數，弧度轉度數
+tstep = 0.005             # 定義模擬步長
+# 配置關節資訊
+jointNum = 6
+baseName = 'Jaco'
+jointName = 'Jaco_joint'
+print('Program started')
+# 關閉潛在的連線
+sim.simxFinish(-1)
+# 每隔0.2s檢測一次，直到連線上V-rep
+while True:
+    clientID = sim.simxStart('127.0.0.1', 19999, True, True, 5000, 5)
+    if clientID &gt; -1:
+        print ('Connected to remote API server')
+        break
+    else:
+        time.sleep(0.2)
+        print("Failed connecting to remote API server!")
+print("Connection success!")
+# 設定模擬步長，為了保持API端與V-rep端相同步長
+sim.simxSetFloatingParameter(clientID, sim.sim_floatparam_simulation_time_step, tstep, sim.simx_opmode_oneshot)
+# 然後開啟同步模式
+sim.simxSynchronous(clientID, True) 
+sim.simxStartSimulation(clientID, sim.simx_opmode_oneshot)
+
+# 然後讀取Base和Joint的控制代碼
+jointHandle = np.zeros((jointNum,), dtype=np.int) # 注意是整型
+for i in range(jointNum):
+    _, returnHandle = sim.simxGetObjectHandle(clientID, jointName + str(i+1), sim.simx_opmode_blocking)
+    jointHandle[i] = returnHandle
+
+_, baseHandle = sim.simxGetObjectHandle(clientID, baseName, sim.simx_opmode_blocking)
+
+print('Handles available!')
+
+# 然後首次讀取關節的初始值，以streaming的形式
+jointConfig = np.zeros((jointNum,))
+for i in range(jointNum):
+     _, jpos = sim.simxGetJointPosition(clientID, jointHandle[i], sim.simx_opmode_streaming)
+     jointConfig[i] = jpos
+     lastCmdTime=sim.simxGetLastCmdTime(clientID)  # 記錄當前時間
+sim.simxSynchronousTrigger(clientID)  # 讓模擬走一步
+# 開始模擬
+while sim.simxGetConnectionId(clientID) != -1:
+    currCmdTime=sim.simxGetLastCmdTime(clientID)  # 記錄當前時間
+    dt = currCmdTime - lastCmdTime # 記錄時間間隔，用於控制
+    # ***
+    # ***
+    # ***
+    lastCmdTime=currCmdTime    # 記錄當前時間
+    sim.simxSynchronousTrigger(clientID)  # 進行下一步
+    sim.simxGetPingTime(clientID)    # 使得該模擬步走完
+            # 讀取當前的狀態值，之後都用buffer形式讀取
+    for i in range(jointNum):
+            _, jpos = sim.simxGetJointPosition(clientID, jointHandle[i], sim.simx_opmode_buffer)
+            print(round(jpos * RAD2DEG, 2))
+            jointConfig[i] = jpos
+
+    # 控制命令需要同時方式，故暫停通訊，用於儲存所有控制命令一起傳送
+    sim.simxPauseCommunication(clientID, True)
+    for i in range(jointNum):
+            sim.simxSetJointTargetPosition(clientID, jointHandle[i], 120/RAD2DEG, sim.simx_opmode_oneshot)
+            sim.simxPauseCommunication(clientID, False)
+            </pre>
+<h1>python</h1>
+<p>各組隨機抽取2個學號並排序</p>
+<pre class="brush:python;auto-links:false;toolbar:false" contenteditable="false">import random
+
+with open("stage3_ag1.txt") as fh:
+    data=fh.readlines()
+
+for i in range(len(data)):
+    group=data[i].rstrip("\n").split("\t")
+    
+    subgroup=group[1:]
+    memberNum=0
+    count =0
+    for j in range(len(subgroup)):
+        if(subgroup[j]!=""):
+            count+=1
+            if(count%2==0):
+                memberNum+=1
+    print("group"+" "+str(i+1)+":"+str(memberNum))
+    beRandomGroup=[]
+    k=0
+    while(k&lt;len(subgroup)):
+        if(subgroup[k]!=""):
+            beRandomGroup.append(subgroup[k])
+        k=k+2
+    var=random.choice(beRandomGroup)
+    while(1==1):
+        var2=random.choice(beRandomGroup)
+        if(var2!=var):
+            break
+    print(var)
+    print(var2)
+    print("---------------------")
+</pre>
+<p>out put</p>
+<pre>group 1:8
+40823123
+40823136
+---------------------
+group 2:8
+40823102
+40871106
+---------------------
+group 3:6
+40523252
+40823154
+---------------------
+group 4:8
+40823121
+40823127
+---------------------
+group 5:8
+40823115
+40823128
+---------------------
+group 6:8
+40823110
+40823153
+---------------------</pre>
+<pre class="brush:lua;auto-links:false;toolbar:false" contenteditable="false"><!--0--></pre>
+<h1>two joints robot</h1>
 <p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/IKOGwoJ2HLk" width="560"></iframe></p>
 <p><br/>We saw this simple two-link robot in the previous lecture about forward kinematics.</p>
 <p>我們在上一堂關於正向運動學的課程中看到這個簡單的雙連桿機構。</p>
@@ -414,272 +662,4 @@ end
 <p>And it is the same expression that I got following the geometric approach in the previous section.</p>
 <p>這與我在上一節中遵循幾何方法求出的表達式一模一樣。</p>
 <p>公式</p>
-<p><img alt="" height="314" src="/images/mtbrobot.png" width="560"/></p><h3>w16_1</h3>
-<h4>Onshape繪製手臂</h4>
-<p><img alt="" height="378" src="/images/w16_1.png" width="1020"/></p>
-<p><a href="https://cad.onshape.com/documents/afa2b64a9d6cff14c62bced8/w/5f455d7b62238b8359139a3a/e/9083ff112ce27fcd606686ec">Onshape檔案</a></p><h3>w16_2</h3>
-<h4>建立 CoppeliaSim 4.1.0 MTB robot 場景</h4>
-<p>請以自行繪製之零件輸入 CoppeliaSim 後, 組合為 MTB robot 模型, 並利用 Leo Editor 以 require 導入 Lua 程式運作, 分別控制各軸轉動示範.</p>
-<p></p>
-<p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/lCD11Zie9HI" width="560"></iframe></p>
-<p></p>
-<pre class="brush:python;auto-links:false;toolbar:false" contenteditable="false">function moving1()
-
-    sim.setJointTargetPosition(joint1,45*math.pi/180)
-    sim.setJointTargetPosition(joint2,-45*math.pi/180)
-
-    
-end
-function moving2()
-
-    sim.setJointTargetPosition(joint1,-45*math.pi/180)
-    sim.setJointTargetPosition(joint2,45*math.pi/180)
-
-    
-end
-
-
-function sysCall_threadmain()
-    
-    t=5
-    joint1=sim.getObjectHandle('joint1')
-    joint2=sim.getObjectHandle('joint2')
-    sim.setJointTargetPosition(joint1,0)
-    sim.setJointTargetPosition(joint2,0)
-
-    sim.wait(t)
-    while sim.getSimulationState()~=sim.simulation_advancing_abouttostopre do
-        moving1()
-        sim.wait(t)
-        moving2()
-        sim.wait(t)
-        sim.setJointTargetPosition(joint1,0)
-        sim.setJointTargetPosition(joint2,0)
-        sim.wait(t)
-    end
-
-end
-</pre>
-<p>影片內檔案放在github</p><h3>w16_3_1</h3>
-<h4>逆向運動學函式</h4>
-<p>1.鍵盤控制:</p>
-<p><iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen" frameborder="0" height="315" src="https://www.youtube.com/embed/zjN3X-FQxyw" title="YouTube video player" width="560"></iframe></p>
-<p>鍵盤控制的ASCII對應表在之前的文章中有，每次轉動5度，吸盤上下則只有下跟原點兩種</p>
-<pre class="brush:python;auto-links:false;toolbar:false" contenteditable="false">function sysCall_init() 
-    b1=sim.getObjectHandle('joint1')
-    m1=sim.getObjectHandle('joint2')
-    s1=sim.getObjectHandle('joint4')
-    suctionPad=sim.getObjectHandle('suctionPad')
-    BaseFrame=sim.getObjectHandle("BaseFrame")
-    block =sim.getObjectHandle("BOX")
-    r1 = 0
-    r2 = 0
-    d3 = 0
-    deg = math.pi/180
-end
-function sysCall_actuation() 
-
-    message, auxiliaryData=sim.getSimulatorMessage()
-        while message ~= -1 do
-            key=auxiliaryData[1]
-            if (message==sim.message_keypress) then
-                if (auxiliaryData[1]==101) then 
-                    --press e to open the suctionpad
-sim.setScriptSimulationParameter(sim.getScriptAssociatedWithObject(suctionPad),'active','true')
-                end 
-                
-                if (auxiliaryData[1]==113) then 
-                    --press q to close the suctionpad
-sim.setScriptSimulationParameter(sim.getScriptAssociatedWithObject(suctionPad),'active','false')
-                end 
-                
-                if (auxiliaryData[1]==068) then 
-                    --press D to turn joint1
-                     r1 = r1 + 5*deg
-                     sim.setJointPosition(b1, r1)
-                end 
-                if (auxiliaryData[1]==065) then 
-                    --press A to turn joint1
-                     r1 = r1  - 5*deg
-                     sim.setJointPosition(b1, r1)
-                end 
-                if (auxiliaryData[1]==100) then 
-                    --press d to turn joint2
-                     r2 = r2 + 5*deg
-                     sim.setJointPosition(m1, r2)
-                end 
-                if (auxiliaryData[1]==097) then 
-                    -- press a to turn joint2
-                     r2 = r2 - 5*deg
-                     sim.setJointPosition(m1, r2)
-                end 
-                if (auxiliaryData[1]==119) then 
-                    --press s to control joint4
-                     d3 =-0.058
-                     sim.setJointPosition(s1, d3)
-                end 
-                if (auxiliaryData[1]==115) then 
-                    --press w to control joint4
-                     sim.setJointPosition(s1, 0)
-                end 
-                
-           end  
-    message, auxiliaryData=sim.getSimulatorMessage()
-        end 
-end 
-
-
-</pre>
-<p></p><h3>w16_3_2</h3>
-<p>2.迴圈自動</p>
-<p><iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen" frameborder="0" height="315" src="https://www.youtube.com/embed/NeT7Q6wGPtY" title="YouTube video player" width="560"></iframe></p>
-<p></p>
-<pre class="brush:python;auto-links:false;toolbar:false" contenteditable="false">function moving(x,y)
-  
-    a1=0.4861386976
-    a2=0.3819028766
---角度&gt;0
-    if x&gt;0 and y&gt;0 then
- 		r=x^2+y^2
-  		q2=math.deg(math.acos((r-a1^2-a2^2)/(2*a1*a2)))
-  		s2=math.sin(math.rad(q2))
-  		c2=math.cos(math.rad(q2))
- 		q1=math.deg(math.atan(y/x)-math.atan((a2*s2)/(a1+a2*c2)))
- 	end
---角度&lt;0 if="" x="" 0="" and="" y="" 0="" then="" q2="-math.deg(math.acos((x^2+y^2-a1^2-a2^2)/(2*a1*a2)))" q1="math.deg(math.atan2(y," x="" math="" atan2="" a2="" math="" sin="" q2="" a1="" a2="" math="" cos="" q2="" end="" print="" q1="" print="" q2="" sim="" setjointtargetposition="" joint1="" q1="" math="" pi="" 180="" sim="" setjointtargetposition="" joint2="" q2="" math="" pi="" 180="" end="" function="" pick_and_place="" x="" y="" sim="" setintegersignal="" pad_switch="" 0="" moving="" x="" y="" sim="" wait="" t="" sim="" setintegersignal="" pad_switch="" 1="" sim="" setjointtargetposition="" joint4="" -0="" 060="" sim="" wait="" t="" sim="" setjointtargetposition="" joint4="" 0="" sim="" wait="" t="" end="" function="" syscall_threadmain="" t="5" joint1="sim.getObjectHandle('joint1')" joint2="sim.getObjectHandle('joint2')" joint4="sim.getObjectHandle('joint4')" sim="" setintegersignal="" pad_switch="" 1="" while="" sim="" getsimulationstate="" sim="" simulation_advancing_abouttostopre="" do="" x="0.2" y="0.7" moving="" x="" y="" sim="" wait="" t="" pick_and_place="" x="" y="" sim="" wait="" t="" x="-0.3" y="-0.55" moving="" x="" y="" sim="" wait="" t="" pick_and_place="" x="" y="" sim="" wait="" t="" end="" end="" pre=""&gt;</pre>
-<p>程式部分採用錢個禮拜中逆向運動學與聯桿的算式，求出兩根連桿旋轉的角度，但(-0.3,-0.55)這個角度的計算還需要再做更正</p>
-<pre class="brush:python;auto-links:false;toolbar:false" contenteditable="false"><!--0--></pre><h1>coppeliasim</h1>
-<h2>RemoteApi</h2>
-<p>I try to make a remoteapi(python) of coppeliasim to control the example of robot<br/>But it just start simulation, and I cannot control the movement of the model as I set it up.</p>
-<p><img alt="" height="619" src="/images/w5_1.gif" width="1219"/></p>
-<p>To use the remote API functionality in python script, need following 3 items:<br/>sim.py simConst.py remoteApi.dill ,it can ce found in coppeliasim-&gt;programming-&gt;remoteapibindings-&gt;python , just put all of then in to a same folder.</p>
-<p></p>
-<p>code</p>
-<pre class="brush:html;auto-links:false;toolbar:false" contenteditable="false">from __future__ import division
-import numpy as np
-import math
-import sim
-
-RAD2EDG = 180 / math.pi   # 常數，弧度轉度數
-tstep = 0.005             # 定義模擬步長
-# 配置關節資訊
-jointNum = 6
-baseName = 'Jaco'
-jointName = 'Jaco_joint'
-print('Program started')
-# 關閉潛在的連線
-sim.simxFinish(-1)
-# 每隔0.2s檢測一次，直到連線上V-rep
-while True:
-    clientID = sim.simxStart('127.0.0.1', 19999, True, True, 5000, 5)
-    if clientID &gt; -1:
-        print ('Connected to remote API server')
-        break
-    else:
-        time.sleep(0.2)
-        print("Failed connecting to remote API server!")
-print("Connection success!")
-# 設定模擬步長，為了保持API端與V-rep端相同步長
-sim.simxSetFloatingParameter(clientID, sim.sim_floatparam_simulation_time_step, tstep, sim.simx_opmode_oneshot)
-# 然後開啟同步模式
-sim.simxSynchronous(clientID, True) 
-sim.simxStartSimulation(clientID, sim.simx_opmode_oneshot)
-
-# 然後讀取Base和Joint的控制代碼
-jointHandle = np.zeros((jointNum,), dtype=np.int) # 注意是整型
-for i in range(jointNum):
-    _, returnHandle = sim.simxGetObjectHandle(clientID, jointName + str(i+1), sim.simx_opmode_blocking)
-    jointHandle[i] = returnHandle
-
-_, baseHandle = sim.simxGetObjectHandle(clientID, baseName, sim.simx_opmode_blocking)
-
-print('Handles available!')
-
-# 然後首次讀取關節的初始值，以streaming的形式
-jointConfig = np.zeros((jointNum,))
-for i in range(jointNum):
-     _, jpos = sim.simxGetJointPosition(clientID, jointHandle[i], sim.simx_opmode_streaming)
-     jointConfig[i] = jpos
-     lastCmdTime=sim.simxGetLastCmdTime(clientID)  # 記錄當前時間
-sim.simxSynchronousTrigger(clientID)  # 讓模擬走一步
-# 開始模擬
-while sim.simxGetConnectionId(clientID) != -1:
-    currCmdTime=sim.simxGetLastCmdTime(clientID)  # 記錄當前時間
-    dt = currCmdTime - lastCmdTime # 記錄時間間隔，用於控制
-    # ***
-    # ***
-    # ***
-    lastCmdTime=currCmdTime    # 記錄當前時間
-    sim.simxSynchronousTrigger(clientID)  # 進行下一步
-    sim.simxGetPingTime(clientID)    # 使得該模擬步走完
-            # 讀取當前的狀態值，之後都用buffer形式讀取
-    for i in range(jointNum):
-            _, jpos = sim.simxGetJointPosition(clientID, jointHandle[i], sim.simx_opmode_buffer)
-            print(round(jpos * RAD2DEG, 2))
-            jointConfig[i] = jpos
-
-    # 控制命令需要同時方式，故暫停通訊，用於儲存所有控制命令一起傳送
-    sim.simxPauseCommunication(clientID, True)
-    for i in range(jointNum):
-            sim.simxSetJointTargetPosition(clientID, jointHandle[i], 120/RAD2DEG, sim.simx_opmode_oneshot)
-            sim.simxPauseCommunication(clientID, False)
-            </pre>
-<h1>python</h1>
-<p>各組隨機抽取2個學號並排序</p>
-<pre class="brush:python;auto-links:false;toolbar:false" contenteditable="false">import random
-
-with open("stage3_ag1.txt") as fh:
-    data=fh.readlines()
-
-for i in range(len(data)):
-    group=data[i].rstrip("\n").split("\t")
-    
-    subgroup=group[1:]
-    memberNum=0
-    count =0
-    for j in range(len(subgroup)):
-        if(subgroup[j]!=""):
-            count+=1
-            if(count%2==0):
-                memberNum+=1
-    print("group"+" "+str(i+1)+":"+str(memberNum))
-    beRandomGroup=[]
-    k=0
-    while(k&lt;len(subgroup)):
-        if(subgroup[k]!=""):
-            beRandomGroup.append(subgroup[k])
-        k=k+2
-    var=random.choice(beRandomGroup)
-    while(1==1):
-        var2=random.choice(beRandomGroup)
-        if(var2!=var):
-            break
-    print(var)
-    print(var2)
-    print("---------------------")
-</pre>
-<p>out put</p>
-<pre>group 1:8
-40823123
-40823136
----------------------
-group 2:8
-40823102
-40871106
----------------------
-group 3:6
-40523252
-40823154
----------------------
-group 4:8
-40823121
-40823127
----------------------
-group 5:8
-40823115
-40823128
----------------------
-group 6:8
-40823110
-40823153
----------------------</pre>
+<p><img alt="" height="314" src="/images/mtbrobot.png" width="560"/></p>
