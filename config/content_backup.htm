@@ -459,17 +459,96 @@ function sysCall_threadmain()
     end
 
 end
-
 </pre>
 <p>影片內檔案放在github</p><h3>w16_3</h3>
 <h4>逆向運動學函式</h4>
 <p>1.鍵盤控制:</p>
 <p><iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen" frameborder="0" height="315" src="https://www.youtube.com/embed/zjN3X-FQxyw" title="YouTube video player" width="560"></iframe></p>
 <p>鍵盤控制的ASCII對應表在之前的文章中有，每次轉動5度，吸盤上下則只有下跟原點兩種</p>
+<pre class="brush:python;auto-links:false;toolbar:false" contenteditable="false">function sysCall_init() 
+    b1=sim.getObjectHandle('joint1')
+    m1=sim.getObjectHandle('joint2')
+    s1=sim.getObjectHandle('joint4')
+    suctionPad=sim.getObjectHandle('suctionPad')
+    BaseFrame=sim.getObjectHandle("BaseFrame")
+    block =sim.getObjectHandle("BOX")
+    r1 = 0
+    r2 = 0
+    d3 = 0
+    deg = math.pi/180
+end
+function sysCall_actuation() 
+
+    message, auxiliaryData=sim.getSimulatorMessage()
+        while message ~= -1 do
+            key=auxiliaryData[1]
+            if (message==sim.message_keypress) then
+                if (auxiliaryData[1]==101) then 
+                    --press e to open the suctionpad
+sim.setScriptSimulationParameter(sim.getScriptAssociatedWithObject(suctionPad),'active','true')
+                end 
+                
+                if (auxiliaryData[1]==113) then 
+                    --press q to close the suctionpad
+sim.setScriptSimulationParameter(sim.getScriptAssociatedWithObject(suctionPad),'active','false')
+                end 
+                
+                if (auxiliaryData[1]==068) then 
+                    --press D to turn joint1
+                     r1 = r1 + 5*deg
+                     sim.setJointPosition(b1, r1)
+                end 
+                if (auxiliaryData[1]==065) then 
+                    --press A to turn joint1
+                     r1 = r1  - 5*deg
+                     sim.setJointPosition(b1, r1)
+                end 
+                if (auxiliaryData[1]==100) then 
+                    --press d to turn joint2
+                     r2 = r2 + 5*deg
+                     sim.setJointPosition(m1, r2)
+                end 
+                if (auxiliaryData[1]==097) then 
+                    -- press a to turn joint2
+                     r2 = r2 - 5*deg
+                     sim.setJointPosition(m1, r2)
+                end 
+                if (auxiliaryData[1]==119) then 
+                    --press s to control joint4
+                     d3 =-0.058
+                     sim.setJointPosition(s1, d3)
+                end 
+                if (auxiliaryData[1]==115) then 
+                    --press w to control joint4
+                     sim.setJointPosition(s1, 0)
+                end 
+                
+           end  
+    message, auxiliaryData=sim.getSimulatorMessage()
+        end 
+end 
+
+
+</pre>
 <p></p>
 <p>2.迴圈自動</p>
 <p><iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen" frameborder="0" height="315" src="https://www.youtube.com/embed/NeT7Q6wGPtY" title="YouTube video player" width="560"></iframe></p>
-<p>程式部分採用錢個禮拜中逆向運動學與聯桿的算式，求出兩根連桿旋轉的角度，但(-0.3,-0.55)這個角度的計算還需要再做更正</p><h1>coppeliasim</h1>
+<p></p>
+<pre class="brush:python;auto-links:false;toolbar:false" contenteditable="false">function moving(x,y)
+  
+    a1=0.4861386976
+    a2=0.3819028766
+--角度&gt;0
+    if x&gt;0 and y&gt;0 then
+ 		r=x^2+y^2
+  		q2=math.deg(math.acos((r-a1^2-a2^2)/(2*a1*a2)))
+  		s2=math.sin(math.rad(q2))
+  		c2=math.cos(math.rad(q2))
+ 		q1=math.deg(math.atan(y/x)-math.atan((a2*s2)/(a1+a2*c2)))
+ 	end
+--角度&lt;0 if="" x="" 0="" and="" y="" 0="" then="" q2="-math.deg(math.acos((x^2+y^2-a1^2-a2^2)/(2*a1*a2)))" q1="math.deg(math.atan2(y," x="" math="" atan2="" a2="" math="" sin="" q2="" a1="" a2="" math="" cos="" q2="" end="" print="" q1="" print="" q2="" sim="" setjointtargetposition="" joint1="" q1="" math="" pi="" 180="" sim="" setjointtargetposition="" joint2="" q2="" math="" pi="" 180="" end="" function="" pick_and_place="" x="" y="" sim="" setintegersignal="" pad_switch="" 0="" moving="" x="" y="" sim="" wait="" t="" sim="" setintegersignal="" pad_switch="" 1="" sim="" setjointtargetposition="" joint4="" -0="" 060="" sim="" wait="" t="" sim="" setjointtargetposition="" joint4="" 0="" sim="" wait="" t="" end="" function="" syscall_threadmain="" t="5" joint1="sim.getObjectHandle('joint1')" joint2="sim.getObjectHandle('joint2')" joint4="sim.getObjectHandle('joint4')" sim="" setintegersignal="" pad_switch="" 1="" while="" sim="" getsimulationstate="" sim="" simulation_advancing_abouttostopre="" do="" x="0.2" y="0.7" moving="" x="" y="" sim="" wait="" t="" pick_and_place="" x="" y="" sim="" wait="" t="" x="-0.3" y="-0.55" moving="" x="" y="" sim="" wait="" t="" pick_and_place="" x="" y="" sim="" wait="" t="" end="" end="" pre=""&gt;</pre>
+<p>程式部分採用錢個禮拜中逆向運動學與聯桿的算式，求出兩根連桿旋轉的角度，但(-0.3,-0.55)這個角度的計算還需要再做更正</p>
+<pre class="brush:python;auto-links:false;toolbar:false" contenteditable="false"><!--0--></pre><h1>coppeliasim</h1>
 <h2>RemoteApi</h2>
 <p>I try to make a remoteapi(python) of coppeliasim to control the example of robot<br/>But it just start simulation, and I cannot control the movement of the model as I set it up.</p>
 <p><img alt="" height="619" src="/images/w5_1.gif" width="1219"/></p>
