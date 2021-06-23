@@ -122,7 +122,7 @@ img.add_border {
                             <li><a href="./../blog/index.html">blog</a></li>
                         </ul>
                       </li>
-                     <li class='has-children'><a href='About.html'>About</a><ul class='dropdown'><li><a href='About me 40823124..html'>About me 40823124.</a></li></ul><li class='has-children'><a href='Team project.html'>Team project</a><ul class='dropdown'><li><a href='Team1 W2.html'>Team1 W2</a><li><a href='Team1 W3.html'>Team1 W3</a><li><a href='Team 2.html'>Team 2</a><li><a href='Difficulties and debugging.html'>Difficulties and debugging</a><li class='has-children'><a href='Team 3.html'>Team 3</a><ul class='dropdown'><li><a href='w16_1.html'>w16_1</a><li><a href='w16_2.html'>w16_2</a><li><a href='w16_3_1.html'>w16_3_1</a><li><a href='w16_3_2.html'>w16_3_2</a></li></li></ul></ul><li class='has-children'><a href='coppeliasim.html'>coppeliasim</a><ul class='dropdown'><li><a href='RemoteApi.html'>RemoteApi</a></li></ul><li><a href='python.html'>python</a><li><a href='two joints robot.html'>two joints robot</a></li>
+                     <li class='has-children'><a href='About.html'>About</a><ul class='dropdown'><li><a href='About me 40823124..html'>About me 40823124.</a></li></ul><li class='has-children'><a href='Team project.html'>Team project</a><ul class='dropdown'><li><a href='Team1 W2.html'>Team1 W2</a><li><a href='Team1 W3.html'>Team1 W3</a><li><a href='Team 2.html'>Team 2</a><li><a href='Difficulties and debugging.html'>Difficulties and debugging</a><li class='has-children'><a href='Team 3.html'>Team 3</a><ul class='dropdown'><li><a href='w16_1.html'>w16_1</a><li><a href='w16_2.html'>w16_2</a><li><a href='w16_3_1.html'>w16_3_1</a><li><a href='w16_3_2.html'>w16_3_2</a><li><a href='w16_3_2修正.html'>w16_3_2修正</a></li></li></ul></ul><li class='has-children'><a href='coppeliasim.html'>coppeliasim</a><ul class='dropdown'><li><a href='RemoteApi.html'>RemoteApi</a></li></ul><li><a href='python.html'>python</a><li><a href='two joints robot.html'>two joints robot</a></li>
                       </ul>
                 </nav>
               </div>
@@ -136,32 +136,32 @@ img.add_border {
     <div id="tipue_search_content">RemoteApi << <a href='RemoteApi.html'>Previous</a> <a href='two joints robot.html'>Next</a> >> two joints robot<br /><h1>python</h1>
 <p>各組隨機抽取2個學號並排序</p>
 <pre class="brush:python;auto-links:false;toolbar:false" contenteditable="false">import random
-
-with open("stage3_ag1.txt") as fh:
+ 
+with open("stage3_ag1.txt") as fh: #讀取
     data=fh.readlines()
-
+ 
 for i in range(len(data)):
-    group=data[i].rstrip("\n").split("\t")
-    
-    subgroup=group[1:]
+    group=data[i].rstrip("\n").split("\t") #刪除空格
+     
+    subgroup=group[1:] #取組別後
     memberNum=0
     count =0
-    for j in range(len(subgroup)):
-        if(subgroup[j]!=""):
+    for j in range(len(subgroup)): 
+        if(subgroup[j]!=""): #取值
             count+=1
-            if(count%2==0):
+            if(count%2==0): #重複學號取1個號碼
                 memberNum+=1
-    print("group"+" "+str(i+1)+":"+str(memberNum))
-    beRandomGroup=[]
+    print("group"+" "+str(i+1)+":"+str(memberNum)) #輸出組別人數
+    beRandomGroup=[] 
     k=0
-    while(k&lt;len(subgroup)):
+    while(k&lt;len(subgroup)): #取學號跳過帳號
         if(subgroup[k]!=""):
             beRandomGroup.append(subgroup[k])
         k=k+2
-    var=random.choice(beRandomGroup)
+    var=random.choice(beRandomGroup) #抽第一個
     while(1==1):
-        var2=random.choice(beRandomGroup)
-        if(var2!=var):
+        var2=random.choice(beRandomGroup)#抽第二個
+        if(var2!=var): #抽到不重複為止
             break
     print(var)
     print(var2)
@@ -191,9 +191,7 @@ group 5:8
 group 6:8
 40823110
 40823153
----------------------</pre>
-<pre class="brush:lua;auto-links:false;toolbar:false" contenteditable="false"><!--0--></pre>
-<br />RemoteApi << <a href='RemoteApi.html'>Previous</a> <a href='two joints robot.html'>Next</a> >> two joints robot</div>
+---------------------</pre><br />RemoteApi << <a href='RemoteApi.html'>Previous</a> <a href='two joints robot.html'>Next</a> >> two joints robot</div>
         
     <!-- footer -->
       <div class="container">

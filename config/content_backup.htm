@@ -377,8 +377,12 @@ end
 <h3>w16_3_2</h3>
 <p>2.迴圈自動</p>
 <p><iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen" frameborder="0" height="315" src="https://www.youtube.com/embed/NeT7Q6wGPtY" title="YouTube video player" width="560"></iframe></p>
-<p></p>
-<p>程式部分採用錢個禮拜中逆向運動學與聯桿的算式，求出兩根連桿旋轉的角度，但(-0.3,-0.55)這個角度的計算還需要再做更正</p><h1>coppeliasim</h1>
+<p><a href="https://gist.github.com/40823124/013d0c991c1435c133ecd733eebe95c4">程式連結</a></p>
+<p>程式部分採用錢個禮拜中逆向運動學與聯桿的算式，求出兩根連桿旋轉的角度，但(-0.3,-0.55)這個角度的計算還需要再做更正</p>
+<h3>w16_3_2修正</h3>
+<p><iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen" frameborder="0" height="315" src="https://www.youtube.com/embed/dCAN_Km__XM" title="YouTube video player" width="560"></iframe></p>
+<p>找出的問題是，(-0.3,-0.55)的座標計算弧度與角度的計算有誤，解決辦法是全部的數值都換成角度，但須注意的是lua中三角函數的計算需要為弧度</p>
+<p><a href="https://gist.github.com/40823124/de555eda2fe5d61639c6c76c26c16007">code</a></p><h1>coppeliasim</h1>
 <h2>RemoteApi</h2>
 <p>I try to make a remoteapi(python) of coppeliasim to control the example of robot<br/>But it just start simulation, and I cannot control the movement of the model as I set it up.</p>
 <p><img alt="" height="619" src="/images/w5_1.gif" width="1219"/></p>
@@ -457,32 +461,32 @@ while sim.simxGetConnectionId(clientID) != -1:
 <h1>python</h1>
 <p>各組隨機抽取2個學號並排序</p>
 <pre class="brush:python;auto-links:false;toolbar:false" contenteditable="false">import random
-
-with open("stage3_ag1.txt") as fh:
+ 
+with open("stage3_ag1.txt") as fh: #讀取
     data=fh.readlines()
-
+ 
 for i in range(len(data)):
-    group=data[i].rstrip("\n").split("\t")
-    
-    subgroup=group[1:]
+    group=data[i].rstrip("\n").split("\t") #刪除空格
+     
+    subgroup=group[1:] #取組別後
     memberNum=0
     count =0
-    for j in range(len(subgroup)):
-        if(subgroup[j]!=""):
+    for j in range(len(subgroup)): 
+        if(subgroup[j]!=""): #取值
             count+=1
-            if(count%2==0):
+            if(count%2==0): #重複學號取1個號碼
                 memberNum+=1
-    print("group"+" "+str(i+1)+":"+str(memberNum))
-    beRandomGroup=[]
+    print("group"+" "+str(i+1)+":"+str(memberNum)) #輸出組別人數
+    beRandomGroup=[] 
     k=0
-    while(k&lt;len(subgroup)):
+    while(k&lt;len(subgroup)): #取學號跳過帳號
         if(subgroup[k]!=""):
             beRandomGroup.append(subgroup[k])
         k=k+2
-    var=random.choice(beRandomGroup)
+    var=random.choice(beRandomGroup) #抽第一個
     while(1==1):
-        var2=random.choice(beRandomGroup)
-        if(var2!=var):
+        var2=random.choice(beRandomGroup)#抽第二個
+        if(var2!=var): #抽到不重複為止
             break
     print(var)
     print(var2)
@@ -512,9 +516,7 @@ group 5:8
 group 6:8
 40823110
 40823153
----------------------</pre>
-<pre class="brush:lua;auto-links:false;toolbar:false" contenteditable="false"><!--0--></pre>
-<h1>two joints robot</h1>
+---------------------</pre><h1>two joints robot</h1>
 <p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/IKOGwoJ2HLk" width="560"></iframe></p>
 <p><br/>We saw this simple two-link robot in the previous lecture about forward kinematics.</p>
 <p>我們在上一堂關於正向運動學的課程中看到這個簡單的雙連桿機構。</p>
